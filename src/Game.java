@@ -6,7 +6,14 @@ public class Game
 
     private Player player;
 
-    Item bookRead;
+    Item poisonPotion = new Item();
+    Item unknownPotion = new Item();
+    Item bookRead = new Item();
+    Item dullSword = new Item();
+    Item steelArmor = new Item();
+    Item masterKey = new Item();
+    Item enchantedSword = new Item();
+    Item enchantedArmor = new Item();
 
     public Game()
     {
@@ -46,23 +53,13 @@ public class Game
         MasterRoom.setExit("east", Outside);
 
 
-
-        Item poisonPotion = new Item();
-        Item unknownPotion = new Item();
-        bookRead = new Item();
-        Item dullSword = new Item();
-        Item SteelArmor = new Item();
-        Item masterKey = new Item();
-
-
-
         Laboratory.setItem("PoisonPotion", poisonPotion);
         Laboratory.setItem("UnknownPotion", unknownPotion);
 
         Library.setItem("Book", bookRead );
         Library.setItem("DullSword", dullSword);
 
-        StorageRoom.setItem("SteelArmor", SteelArmor);
+        StorageRoom.setItem("SteelArmor", steelArmor);
         StorageRoom.setItem("MasterKey", masterKey);
 
 
@@ -127,6 +124,7 @@ public class Game
                 break;
 
             case APPLY:
+                applyItem(command);
                 break;
 
         }
@@ -229,10 +227,6 @@ public class Game
         String readCommand = command.getSecondWord();
         Item thingToRead = player.getItem(readCommand);
 
-        if(thingToRead == null)
-        {
-            System.out.println("You can't read " + command.getSecondWord() + " Maybe it's not in your inventory. ");
-        }
         if(!thingToRead.equals(bookRead))
         {
             System.out.println("You can't read " + command.getSecondWord());
@@ -243,6 +237,27 @@ public class Game
             System.out.println("Information about the potions read: ");
             System.out.println("The Poison Potion is highly dangerous and could be applied onto something. ");
             System.out.println("The Unknown Potion is a Protective Potion and could be applied onto something. ");
+        }
+    }
+
+    private void applyItem(Command command)
+    {
+        if(!command.hasSecondWord())
+        {
+            System.out.println("Apply what? ");
+            return;
+        }
+
+        String applyCommand = command.getSecondWord();
+        Item appliedItem = player.getItem(applyCommand);
+
+        if(!appliedItem.equals(dullSword) || !appliedItem.equals(steelArmor))
+        {
+            System.out.println("You can't apply " + command.getSecondWord());
+        }
+        else
+        {
+            System.out.println("You have applied " + command.getSecondWord());
         }
     }
 
