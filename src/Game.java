@@ -251,13 +251,22 @@ public class Game
         String applyCommand = command.getSecondWord();
         Item appliedItem = player.getItem(applyCommand);
 
-        if(!appliedItem.equals(dullSword) || !appliedItem.equals(steelArmor))
+
+        if(!appliedItem.equals(dullSword))
         {
             System.out.println("You can't apply " + command.getSecondWord());
         }
+        if(appliedItem.equals(dullSword))
+        {
+            System.out.println("What would you like to apply it with? ");
+        }
+        if(appliedItem.equals(poisonPotion))
+        {
+            dullSword.equals(enchantedSword);
+        }
         else
         {
-            System.out.println("You have applied " + command.getSecondWord());
+            System.out.println("Your " + appliedItem + "has been enchanted");
         }
     }
 
