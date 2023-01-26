@@ -266,7 +266,7 @@ public class Game
         }
         else
         {
-            System.out.println("Your " + appliedItem + "has been enchanted");
+
         }
     }
 
