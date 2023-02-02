@@ -1,5 +1,8 @@
+import java.util.Scanner;
 public class Game
 {
+    boolean wantToQuit;
+
     private Room currentRoom;
 
     private Parser parser;
@@ -7,13 +10,13 @@ public class Game
     private Player player;
 
     Item poisonPotion = new Item();
-    Item unknownPotion = new Item();
     Item bookRead = new Item();
     Item dullSword = new Item();
-    Item steelArmor = new Item();
     Item masterKey = new Item();
     Item enchantedSword = new Item();
-    Item enchantedArmor = new Item();
+
+    Room Outside;
+    Room MasterRoom;
 
     public Game()
     {
@@ -30,19 +33,14 @@ public class Game
 
     public void createRooms()
     {
-        Room Laboratory = new Room("You look around, you see many mechanisms, trinkets, and tubes filled with experiments", "There are 2 potions, one that seems to contain poison and the other is unknown. To the west is a door that seems to go to a library. To the east is an open door that leads to a sewer.");
-        Room AcidicSewer = new Room("The foul smell of the sewers makes you want to leave immediately. ", "You take a small glance around the room and see a disposal that leads to somewhere unknown, you seem to be able to go in but the sewers is filled with acid. ");
-        Room Library = new Room("Books upon books are filled around you.", "There is a small case that seems to have no lock and books shelves with books you may read. As you look to the north, a chill goes down your spine, a locked door that leads to what looks like the owners room. ");
-        Room StorageRoom = new Room("Many used items are laying around.", "Only a suit of armor and a key seems to be of use. ");
-        Room MasterRoom = new Room("You see countless papers and trinkets laying around with a singular light that illuminates the room.", "It is indeed the owners room. There is a man who stands in the room who turns toward your direction. The man is enraged and looks as if he's going to attack you. ");
-        Room Outside = new Room("You reach the outside of the palace, ", "Outside Long");
+        Room Laboratory = new Room("You look around, you see many mechanisms, trinkets, and tubes filled with experiments", "There is a potion that seems to contain poison. To the west is a door that seems to go to a library.", "Laboratory");
+        Room Library = new Room("Books upon books are filled around you.", "There is a small case that seems to have no lock and books shelves with books you may read. As you look to the north, a chill goes down your spine, a locked door that leads to what looks like the owners room. ", "Library");
+        Room StorageRoom = new Room("Many used items are laying around.", "Only a suit of armor and a key seems to be of use. ","Storage Room");
+        MasterRoom = new Room("You see countless papers and trinkets laying around with a singular light that illuminates the room.", "It is indeed the owners room. There is a man who stands in the room who turns toward your direction. The man is enraged and looks as if he's going to attack you. ","Master Room");
+        Outside = new Room("You reach the outside of the palace, you have escaped. A new adventure awaits. ", "You see a vast wasteland and in the center is a kingdom. ","Outside");
 
 
-        Laboratory.setExit("east", AcidicSewer);
         Laboratory.setExit("west", Library);
-
-        AcidicSewer.setExit("west", Laboratory);
-        AcidicSewer.setExit("east", Outside);
 
         Library.setExit("east", Laboratory);
         Library.setExit("south", StorageRoom);
@@ -50,19 +48,19 @@ public class Game
 
         StorageRoom.setExit("north", Library);
 
+
         MasterRoom.setExit("east", Outside);
+        MasterRoom.setExit("south", Library);
 
 
         Laboratory.setItem("PoisonPotion", poisonPotion);
-        Laboratory.setItem("UnknownPotion", unknownPotion);
+
 
         Library.setItem("Book", bookRead );
         Library.setItem("DullSword", dullSword);
 
-        StorageRoom.setItem("SteelArmor", steelArmor);
+
         StorageRoom.setItem("MasterKey", masterKey);
-
-
 
 
         currentRoom = Laboratory;
@@ -84,7 +82,6 @@ public class Game
 
     private boolean processCommand(Command command)
     {
-        boolean wantToQuit = false;
         System.out.println(command.getCommandWord());
         CommandWord commandWord = command.getCommandWord();
 
@@ -166,6 +163,60 @@ public class Game
             System.out.println("There is no entrance! ");
         }
 
+        String choiceYesNo = "";
+        if(nextRoom == MasterRoom)
+        {
+            Scanner kb = new Scanner(System.in);
+            System.out.println("You are in the owners room. ");
+            System.out.println("The owner of the palace is angry at you and starts to attack you, you successfully dodge the first attack.");
+            System.out.println("Would you like to attack with the current sword you have? [Y/N] ");
+            choiceYesNo = kb.nextLine();
+        }
+
+        if(choiceYesNo.equals("Y"))
+        {
+            if(!player.getInventory().containsKey("DullSword"))
+            {
+                System.out.println("You have nothing to attack with you die. ");
+                System.out.println("");
+                wantToQuit = true;
+            }
+        }
+
+        if(choiceYesNo.equals("Y"))
+        {
+            if(player.getInventory().containsKey("DullSword"))
+            {
+                System.out.println("You try attacking him with the worst sword possible and you die. (try attacking with a better sword next time) ");
+                System.out.println("");
+                wantToQuit = true;
+            }
+        }
+
+
+        if(choiceYesNo.equals("Y"))
+        {
+            if(player.getInventory().containsKey("EnchantedSword"))
+            {
+                System.out.println("You successfully attack him and kill the master. You may now escape to the east using a key found on the map. ");
+                System.out.println("");
+            }
+        }
+        if(choiceYesNo.equals("N"))
+        {
+            System.out.println("You refuse to attack the owner but he attacks you, you die. ");
+            System.out.println("");
+            wantToQuit = true;
+        }
+
+        else if(nextRoom == Outside)
+        {
+            if(!player.getInventory().containsKey("MasterKey"))
+            {
+                System.out.println("The door is locked, you might find the key somewhere on the map. ");
+                return;
+            }
+        }
         else
         {
             currentRoom = nextRoom;
@@ -236,7 +287,6 @@ public class Game
             System.out.println("You have read the book. ");
             System.out.println("Information about the potions read: ");
             System.out.println("The Poison Potion is highly dangerous and could be applied onto something. ");
-            System.out.println("The Unknown Potion is a Protective Potion and could be applied onto something. ");
         }
     }
 
@@ -256,20 +306,24 @@ public class Game
         {
             System.out.println("You can't apply " + command.getSecondWord());
         }
+
+        String applyPotion = "";
+
         if(appliedItem.equals(dullSword))
         {
-            System.out.println("What would you like to apply it with? ");
+            Scanner kb = new Scanner(System.in);
+            System.out.println("What would you like to apply it with? (an item IN your inventory)");
+            applyPotion = kb.nextLine();
         }
-        if(appliedItem.equals(poisonPotion))
+        if(applyPotion.equals("PoisonPotion"))
         {
-            dullSword.equals(enchantedSword);
-        }
-        else
-        {
-
+            player.getItem("PoisonPotion");
+            player.getItem("DullSword");
+            player.setItem("EnchantedSword", new Item ());
+            System.out.println("Your DullSword has been enchanted.");
+            System.out.println("DullSword has turned into EnchantedSword");
         }
     }
-
 
     private boolean quit(Command command)
     {

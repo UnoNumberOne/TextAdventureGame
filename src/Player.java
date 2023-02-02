@@ -32,6 +32,9 @@ public class Player
     {
         return inventory.remove(name);
     }
-
+    public HashMap getInventory()
+    {
+        return inventory;
+    }
 
 }

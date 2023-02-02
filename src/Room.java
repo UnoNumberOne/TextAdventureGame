@@ -10,9 +10,11 @@ public class Room
     private HashMap<String, Item>inventory;
 
     private String longDescription;
+    private String nameRoom;
 
-    public Room(String description, String longDescription)
+    public Room(String description, String longDescription, String name)
     {
+        this.nameRoom = name;
         this.description = description;
         this.longDescription = longDescription;
         exits = new HashMap<String, Room>();
@@ -69,5 +71,10 @@ public class Room
     public String getLongDescription()
     {
         return longDescription + "\n" + getExitString() + "\n" + getItemString();
+    }
+
+    public String getRoomName()
+    {
+        return nameRoom;
     }
 }
