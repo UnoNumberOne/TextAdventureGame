@@ -163,24 +163,37 @@ public class Game
             System.out.println("There is no entrance! ");
         }
 
+        if(nextRoom.equals(Outside))
+        {
+            if(!player.getInventory().containsKey("MasterKey"))
+            {
+                System.out.println("The door is locked, you might find the key somewhere on the map. ");
+                return;
+            }
+
+            else
+            {
+                currentRoom = Outside;
+                System.out.println(currentRoom.getShortDescription());
+                System.out.println(currentRoom.getLongDescription());
+                System.out.println("Congratulations you have won the game!");
+                wantToQuit = true;
+            }
+        }
+        else
+        {
+            currentRoom = nextRoom;
+            System.out.println(currentRoom.getShortDescription());
+        }
+
         String choiceYesNo = "";
-        if(nextRoom == MasterRoom)
+        if(nextRoom.equals(MasterRoom))
         {
             Scanner kb = new Scanner(System.in);
             System.out.println("You are in the owners room. ");
             System.out.println("The owner of the palace is angry at you and starts to attack you, you successfully dodge the first attack.");
             System.out.println("Would you like to attack with the current sword you have? [Y/N] ");
             choiceYesNo = kb.nextLine();
-        }
-
-        if(choiceYesNo.equals("Y"))
-        {
-            if(!player.getInventory().containsKey("DullSword"))
-            {
-                System.out.println("You have nothing to attack with you die. ");
-                System.out.println("");
-                wantToQuit = true;
-            }
         }
 
         if(choiceYesNo.equals("Y"))
@@ -192,7 +205,6 @@ public class Game
                 wantToQuit = true;
             }
         }
-
 
         if(choiceYesNo.equals("Y"))
         {
@@ -209,19 +221,7 @@ public class Game
             wantToQuit = true;
         }
 
-        else if(nextRoom == Outside)
-        {
-            if(!player.getInventory().containsKey("MasterKey"))
-            {
-                System.out.println("The door is locked, you might find the key somewhere on the map. ");
-                return;
-            }
-        }
-        else
-        {
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getShortDescription());
-        }
+
     }
 
     private void grabItem(Command command)
